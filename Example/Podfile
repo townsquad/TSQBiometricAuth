@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'TSQBiometricAuth_Example' do
+  pod 'TSQBiometricAuth', :path => '../'
+
+  target 'TSQBiometricAuth_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
