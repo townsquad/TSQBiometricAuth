@@ -1,0 +1,28 @@
+PODS:
+  - RxCocoa (4.2.0):
+    - RxSwift (~> 4.0)
+  - RxSwift (4.2.0)
+  - TSQBiometricAuth (0.1.0):
+    - RxCocoa (~> 4.0)
+    - RxSwift (~> 4.0)
+
+DEPENDENCIES:
+  - TSQBiometricAuth (from `../`)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - RxCocoa
+    - RxSwift
+
+EXTERNAL SOURCES:
+  TSQBiometricAuth:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  RxCocoa: 0b54909c902e1e581212a03e690bbd94032d8baa
+  RxSwift: 99e10317ddfcc7fbe01356aafd118fde4a0be104
+  TSQBiometricAuth: 5ec559e28f9f9c2fc5e2f4bc65958b08260dd9aa
+
+PODFILE CHECKSUM: b3b269422930db6f91c846ab9c8d5110b005d4ba
+
+COCOAPODS: 1.5.0
