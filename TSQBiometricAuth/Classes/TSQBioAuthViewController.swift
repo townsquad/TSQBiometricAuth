@@ -25,7 +25,7 @@ final public class TSQBioAuthViewController: UIViewController {
     
     var viewModel: TSQBioAuthViewModel! {
         didSet {
-            viewModel.delegate = self
+            viewModel.internalDelegate = self
         }
     }
     
@@ -57,16 +57,22 @@ final public class TSQBioAuthViewController: UIViewController {
         self.buttonsStackView.isHidden = true
         
         self.firstButton = UIButton(frame: CGRect.zero)
-        self.firstButton.layer.cornerRadius = 5.0
-        self.firstButton.layer.borderColor = UIColor.white.cgColor
-        self.firstButton.layer.borderWidth = 1.0
-        self.firstButton.backgroundColor = UIColor.purple
+        self.firstButton.setTitle(self.viewModel.firstButtonConfig.text, for: .normal)
+        self.firstButton.setTitleColor(self.viewModel.firstButtonConfig.textColor, for: .normal)
+        self.firstButton.titleLabel?.font = self.viewModel.firstButtonConfig.font
+        self.firstButton.layer.cornerRadius = self.viewModel.firstButtonConfig.cornerRadius
+        self.firstButton.layer.borderColor = self.viewModel.firstButtonConfig.borderColor
+        self.firstButton.layer.borderWidth = self.viewModel.firstButtonConfig.borderWidth
+        self.firstButton.backgroundColor = self.viewModel.firstButtonConfig.backgroundColor
         
         self.secondButton = UIButton(frame: CGRect.zero)
-        self.secondButton.layer.cornerRadius = 5.0
-        self.secondButton.layer.borderColor = UIColor.white.cgColor
-        self.secondButton.layer.borderWidth = 1.0
-        self.secondButton.backgroundColor = UIColor.orange
+        self.secondButton.setTitle(self.viewModel.secondButtonConfig.text, for: .normal)
+        self.secondButton.setTitleColor(self.viewModel.secondButtonConfig.textColor, for: .normal)
+        self.secondButton.titleLabel?.font = self.viewModel.secondButtonConfig.font
+        self.secondButton.layer.cornerRadius = self.viewModel.secondButtonConfig.cornerRadius
+        self.secondButton.layer.borderColor = self.viewModel.secondButtonConfig.borderColor
+        self.secondButton.layer.borderWidth = self.viewModel.secondButtonConfig.borderWidth
+        self.secondButton.backgroundColor = self.viewModel.secondButtonConfig.backgroundColor
         
         self.buttonsStackView.addArrangedSubview(self.firstButton)
         self.buttonsStackView.addArrangedSubview(self.secondButton)
@@ -93,10 +99,11 @@ final public class TSQBioAuthViewController: UIViewController {
         self.buttonsStackView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -16.0).isActive = true
         self.buttonsStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16.0).isActive = true
         self.buttonsStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16.0).isActive = true
-        self.buttonsStackView.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
         self.buttonsStackView.spacing = 16.0
 
         self.firstButton.widthAnchor.constraint(equalTo: self.secondButton.widthAnchor, multiplier: 1.0).isActive = true
+        self.firstButton.heightAnchor.constraint(equalToConstant: self.viewModel.firstButtonConfig.height).isActive = true
+        self.secondButton.heightAnchor.constraint(equalToConstant: self.viewModel.secondButtonConfig.height).isActive = true
     }
     
     private func setupBindings() {
@@ -111,7 +118,7 @@ final public class TSQBioAuthViewController: UIViewController {
     // Logic
     
     private func didPressFirstButton() {
-        self.viewModel.cancelBiometricAuthentication()
+        self.viewModel.disableBiometricAuthentication()
     }
     
     private func didPressSecondButton() {
@@ -135,8 +142,8 @@ final public class TSQBioAuthViewController: UIViewController {
 }
 
 @available(iOS 9.0, *)
-extension TSQBioAuthViewController: TSQBioAuthenticationDelegate {
-    public func authenticationFinishedWithState(state: TSQBioAuthState) {
+extension TSQBioAuthViewController: TSQBioAuthenticationInternalDelegate {
+    func authenticationFinishedWithState(state: TSQBioAuthState) {
         switch state {
         case .success:
             self.dismiss(animated: true, completion: nil)

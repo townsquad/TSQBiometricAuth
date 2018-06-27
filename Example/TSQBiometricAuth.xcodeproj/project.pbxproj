@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A67629820E43528002C35B6 /* Shrikhand-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0A67629720E43528002C35B6 /* Shrikhand-Regular.ttf */; };
+		0A67629920E43788002C35B6 /* Shrikhand-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0A67629720E43528002C35B6 /* Shrikhand-Regular.ttf */; };
 		182C056E235FB34EB4C52D2C /* Pods_TSQBiometricAuth_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A845110B37137F959CB9C599 /* Pods_TSQBiometricAuth_Tests.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
@@ -29,6 +31,7 @@
 
 /* Begin PBXFileReference section */
 		03FE8BB746985179B9861B7A /* TSQBiometricAuth.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TSQBiometricAuth.podspec; path = ../TSQBiometricAuth.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		0A67629720E43528002C35B6 /* Shrikhand-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Shrikhand-Regular.ttf"; sourceTree = "<group>"; };
 		19B0F6BC6912449191380BDE /* Pods_TSQBiometricAuth_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TSQBiometricAuth_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		25CB1934787C199BFD07469C /* Pods-TSQBiometricAuth_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TSQBiometricAuth_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TSQBiometricAuth_Tests/Pods-TSQBiometricAuth_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		47C0B4F077FC075136EF037E /* Pods-TSQBiometricAuth_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TSQBiometricAuth_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-TSQBiometricAuth_Example/Pods-TSQBiometricAuth_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -109,6 +112,7 @@
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
+				0A67629720E43528002C35B6 /* Shrikhand-Regular.ttf */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 			);
 			name = "Example for TSQBiometricAuth";
@@ -217,6 +221,7 @@
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = S2DC59V9N7;
 						LastSwiftMigration = 0900;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -246,6 +251,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A67629820E43528002C35B6 /* Shrikhand-Regular.ttf in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
@@ -256,6 +262,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A67629920E43788002C35B6 /* Shrikhand-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +512,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 25CB1934787C199BFD07469C /* Pods-TSQBiometricAuth_Tests.debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = S2DC59V9N7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -526,6 +534,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E8052FFBCF142F8212409A56 /* Pods-TSQBiometricAuth_Tests.release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = S2DC59V9N7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
