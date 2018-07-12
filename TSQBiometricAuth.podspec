@@ -21,11 +21,11 @@ Pod::Spec.new do |s|
     TSQBiometricAuth is a lib to enable the use of biometric authentication via simple ViewController usage.
     DESC
     
-    s.homepage         = 'https://github.com/Kévin Cardoso de Sá/TSQBiometricAuth'
+    s.homepage         = 'https://bitbucket.org/socialcondo/ios-biometric-authentication/src/master/'
     # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
     s.license          = { :type => 'MIT', :file => 'LICENSE' }
     s.author           = { 'Kévin Cardoso de Sá' => 'kevin@townsq.com.br' }
-    s.source           = { :git => 'https://github.com/Kévin Cardoso de Sá/TSQBiometricAuth.git', :tag => s.version.to_s }
+    s.source           = { :git => 'https://bitbucket.org/socialcondo/ios-biometric-authentication.git', :tag => s.version.to_s }
     # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
     
     s.ios.deployment_target = '9.0'
