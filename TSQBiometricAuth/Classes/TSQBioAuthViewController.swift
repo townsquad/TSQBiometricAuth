@@ -124,39 +124,19 @@ final public class TSQBioAuthViewController: UIViewController {
     private func didPressSecondButton() {
         self.viewModel.performBiometricAuthentication()
     }
-    
-    // Alert
-    
-    private func showAlert(withTitle title: String, withMessage message: String) {
-        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        
-        let okAction = UIAlertAction(title: "Ok", style: .default) { (_) in
-            self.buttonsStackView.isHidden = false
-        }
-        alertVC.addAction(okAction)
-        
-        DispatchQueue.main.async {
-            self.present(alertVC, animated: true, completion: nil)
-        }
-    }
 }
 
 @available(iOS 9.0, *)
 extension TSQBioAuthViewController: TSQBioAuthenticationInternalDelegate {
     func authenticationFinishedWithState(state: TSQBioAuthState) {
-        switch state {
-        case .success:
+        if state == .success {
             self.dismiss(animated: true, completion: nil)
-        case .cancelled:
-            self.showAlert(withTitle: "Cancelled", withMessage: "cancelled")
-        case .notSet:
-            self.showAlert(withTitle: "Not Set", withMessage: "not set")
-        case .passcode:
-            self.showAlert(withTitle: "Passcode", withMessage: "passcode")
-        case .retry:
-            self.showAlert(withTitle: "Retry", withMessage: "retry")
-        case .unavailable:
-            self.showAlert(withTitle: "Unavailable", withMessage: "unavailable")
+        } else {
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.buttonsStackView.isHidden = false
+                })
+            }
         }
     }
 }

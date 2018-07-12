@@ -50,6 +50,7 @@ enum TSQBioAuthState {
     case success
     case retry
     case cancelled
+    case cancelledByUser
     case unavailable
     case passcode
     case notSet
@@ -107,7 +108,7 @@ public class TSQBioAuthViewModel {
     }
     
     func disableBiometricAuthentication() {
-        self.internalDelegate?.authenticationFinishedWithState(state: .cancelled)
+        self.internalDelegate?.authenticationFinishedWithState(state: .cancelledByUser)
         self.delegate?.authenticationDisabledByUserChoice()
     }
 
