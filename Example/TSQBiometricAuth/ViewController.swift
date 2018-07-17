@@ -59,7 +59,9 @@ class ViewController: UIViewController {
                                                   secondButtonConfig: secondButtonConfig) else {
             return
         }
-        let viewController = TSQBioAuthViewController.create(viewModel: viewModel)
+        guard let viewController = TSQBioAuthViewController.create(viewModel: viewModel) as? TSQBioAuthViewController else {
+            return
+        }
         self.present(viewController, animated: true, completion: nil)
     }
 }
