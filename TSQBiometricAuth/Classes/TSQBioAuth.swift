@@ -15,6 +15,8 @@ public class TSQBioAuth {
     private var error: NSError?
     private let authenticationType = LAPolicy.deviceOwnerAuthentication
     
+    public init() {}
+    
     public func canUseAuthentication() -> Bool {
         if self.context.canEvaluatePolicy(self.authenticationType, error: &self.error) {
             return true
