@@ -5,8 +5,8 @@
 //  Created by Kevin on 23/06/18.
 //
 
+import RxSwift
 import Foundation
-import LocalAuthentication
 
 public struct ButtonConfiguration {
     let cornerRadius: CGFloat
@@ -46,14 +46,10 @@ protocol TSQBioAuthenticationInternalDelegate: AnyObject {
     func authenticationFinishedWithState(state: TSQBioAuthState)
 }
 
-enum TSQBioAuthState {
+public enum TSQBioAuthState {
     case success
-    case retry
-    case cancelled
     case cancelledByUser
-    case unavailable
-    case passcode
-    case notSet
+    case error
 }
 
 public class TSQBioAuthViewModel {
@@ -65,17 +61,19 @@ public class TSQBioAuthViewModel {
     
     weak var internalDelegate: TSQBioAuthenticationInternalDelegate?
     public weak var delegate: TSQBioAuthenticationDelegate?
+    public let bioAuthState = PublishSubject<TSQBioAuthState>()
     
-    private let context = LAContext()
-    private var error: NSError?
     private let reason: String
+    private let tsqBioAuth: TSQBioAuth
+    private let disposeBag = DisposeBag()
     
     // MARK: Initialization
     
     public init?(reason: String,
                  firstButtonConfig: ButtonConfiguration = ButtonConfiguration(),
                  secondButtonConfig: ButtonConfiguration = ButtonConfiguration()) {
-        if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
+        self.tsqBioAuth = TSQBioAuth()
+        if self.tsqBioAuth.canUseAuthentication() {
             self.reason = reason
             self.firstButtonConfig = firstButtonConfig
             self.secondButtonConfig = secondButtonConfig
@@ -87,53 +85,31 @@ public class TSQBioAuthViewModel {
     // MARK: Logic
     
     func performBiometricAuthentication() {
-        if self.context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &self.error) {
-            self.context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: self.reason) { (success, error) in
-                if success {
-                    self.internalDelegate?.authenticationFinishedWithState(state: .success)
-                    self.delegate?.authenticationSuccess()
-                } else {
-                    if let errorCode = error?._code {
-                        let bioAuthState = self.getBioAuthState(errorCode: errorCode)
-                        self.internalDelegate?.authenticationFinishedWithState(state: bioAuthState)
-                    }
-                    let bioAuthState = self.getBioAuthState(errorCode: LAError.Code.authenticationFailed.rawValue)
-                    self.internalDelegate?.authenticationFinishedWithState(state: bioAuthState)
-                }
-            }
+        if self.tsqBioAuth.canUseAuthentication() {
+            self.tsqBioAuth.authenticate(self.reason).subscribe(onNext: { [weak self] (_) in
+                self?.onAuthenticationSuccess()
+            }, onError: { [weak self] (_) in
+                self?.onAuthenticationError()
+            }).disposed(by: self.disposeBag)
         } else {
-            let bioAuthState = self.getBioAuthState(errorCode: LAError.Code.touchIDNotAvailable.rawValue)
-            self.internalDelegate?.authenticationFinishedWithState(state: bioAuthState)
+            self.onAuthenticationError()
         }
+    }
+    
+    private func onAuthenticationSuccess() {
+        self.internalDelegate?.authenticationFinishedWithState(state: .success)
+        self.delegate?.authenticationSuccess()
+        self.bioAuthState.onNext(.success)
+    }
+    
+    private func onAuthenticationError() {
+        self.internalDelegate?.authenticationFinishedWithState(state: .error)
+        self.bioAuthState.onNext(.error)
     }
     
     func disableBiometricAuthentication() {
         self.internalDelegate?.authenticationFinishedWithState(state: .cancelledByUser)
         self.delegate?.authenticationDisabledByUserChoice()
-    }
-
-    func getBioAuthState(errorCode: Int) -> TSQBioAuthState {
-        switch errorCode {
-        case LAError.appCancel.rawValue:
-            return .retry
-        case LAError.authenticationFailed.rawValue:
-            return .retry
-        case LAError.invalidContext.rawValue:
-            return .cancelled
-        case LAError.passcodeNotSet.rawValue:
-            return .notSet
-        case LAError.systemCancel.rawValue:
-            return .cancelled
-        case LAError.touchIDLockout.rawValue:
-            return .cancelled
-        case LAError.touchIDNotAvailable.rawValue:
-            return .unavailable
-        case LAError.userCancel.rawValue:
-            return .cancelled
-        case LAError.userFallback.rawValue:
-            return .passcode
-        default:
-            return .retry
-        }
+        self.bioAuthState.onNext(.cancelledByUser)
     }
 }

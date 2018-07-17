@@ -129,7 +129,7 @@ final public class TSQBioAuthViewController: UIViewController {
 @available(iOS 9.0, *)
 extension TSQBioAuthViewController: TSQBioAuthenticationInternalDelegate {
     func authenticationFinishedWithState(state: TSQBioAuthState) {
-        if state == .success {
+        if state == .success || state == TSQBioAuthState.cancelledByUser {
             self.dismiss(animated: true, completion: nil)
         } else {
             DispatchQueue.main.async {
