@@ -8,7 +8,26 @@
 import RxSwift
 import Foundation
 
-public struct ButtonConfiguration {
+public struct TSQImageConfiguration {
+    let height: CGFloat
+    let width: CGFloat
+    let xOffset: CGFloat
+    let yOffset: CGFloat
+    let contentMode: UIViewContentMode
+    
+    public init(height: CGFloat = 80,
+                width: CGFloat = 80,
+                xOffset: CGFloat = 0,
+                yOffset: CGFloat = 0,
+                contentMode: UIViewContentMode = .scaleToFill) {
+        self.height = height
+        self.width = width
+        self.xOffset = xOffset
+        self.yOffset = yOffset
+        self.contentMode = contentMode
+    }
+}
+public struct TSQButtonConfiguration {
     let cornerRadius: CGFloat
     let borderColor: CGColor
     let borderWidth: CGFloat
@@ -56,8 +75,9 @@ public class TSQBioAuthViewModel {
     
     // MARK: Properties
     
-    let firstButtonConfig: ButtonConfiguration
-    let secondButtonConfig: ButtonConfiguration
+    let firstButtonConfig: TSQButtonConfiguration
+    let secondButtonConfig: TSQButtonConfiguration
+    let logoConfig: TSQImageConfiguration
     
     weak var internalDelegate: TSQBioAuthenticationInternalDelegate?
     public weak var delegate: TSQBioAuthenticationDelegate?
@@ -70,13 +90,15 @@ public class TSQBioAuthViewModel {
     // MARK: Initialization
     
     public init?(reason: String,
-                 firstButtonConfig: ButtonConfiguration = ButtonConfiguration(),
-                 secondButtonConfig: ButtonConfiguration = ButtonConfiguration()) {
+                 firstButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
+                 secondButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
+                 logoConfig: TSQImageConfiguration = TSQImageConfiguration()) {
         self.tsqBioAuth = TSQBioAuth()
         if self.tsqBioAuth.canUseAuthentication() {
             self.reason = reason
             self.firstButtonConfig = firstButtonConfig
             self.secondButtonConfig = secondButtonConfig
+            self.logoConfig = logoConfig
         } else {
             return nil
         }

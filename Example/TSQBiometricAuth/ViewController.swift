@@ -38,7 +38,7 @@ class ViewController: UIViewController {
         guard let font = UIFont(name: "Shrikhand", size: 14.0) else {
             return
         }
-        let firstButtonConfig = ButtonConfiguration(cornerRadius: 5.0,
+        let firstButtonConfig = TSQButtonConfiguration(cornerRadius: 5.0,
                                                     borderColor: UIColor(hexString: "7ebc0a"),
                                                     borderWidth: 1.0,
                                                     backgroundColor: UIColor.white,
@@ -46,7 +46,7 @@ class ViewController: UIViewController {
                                                     text: "Cancelar",
                                                     textColor: UIColor.black,
                                                     font: font)
-        let secondButtonConfig = ButtonConfiguration(cornerRadius: 5.0,
+        let secondButtonConfig = TSQButtonConfiguration(cornerRadius: 5.0,
                                                     borderColor: UIColor(hexString: "7ebc0a"),
                                                     borderWidth: 1.0,
                                                     backgroundColor: UIColor.white,

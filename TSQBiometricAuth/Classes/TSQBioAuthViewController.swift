@@ -73,6 +73,7 @@ final public class TSQBioAuthViewController: UIViewController {
 
         self.logoImageView = UIImageView(frame: CGRect.zero)
         self.logoImageView?.image = self.logoImage
+        self.logoImageView?.contentMode = self.viewModel.logoConfig.contentMode
 
         self.buttonsStackView = UIStackView(frame: CGRect.zero)
         self.buttonsStackView?.backgroundColor = .red
@@ -112,8 +113,7 @@ final public class TSQBioAuthViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        guard let logoImageView = self.logoImageView,
-            let firstButton = self.firstButton,
+        guard let firstButton = self.firstButton,
             let secondButton = self.secondButton else {
             return
         }
@@ -125,10 +125,12 @@ final public class TSQBioAuthViewController: UIViewController {
         self.backgroundImageView?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
 
         self.logoImageView?.translatesAutoresizingMaskIntoConstraints = false
-        self.logoImageView?.heightAnchor.constraint(equalToConstant: 80.0).isActive = true
-        self.logoImageView?.widthAnchor.constraint(equalTo: logoImageView.heightAnchor, multiplier: 1.0).isActive = true
-        self.logoImageView?.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        self.logoImageView?.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        self.logoImageView?.heightAnchor.constraint(equalToConstant: self.viewModel.logoConfig.height).isActive = true
+        self.logoImageView?.widthAnchor.constraint(equalToConstant: self.viewModel.logoConfig.width).isActive = true
+        self.logoImageView?.centerXAnchor.constraint(equalTo: self.view.centerXAnchor,
+                                                     constant: self.viewModel.logoConfig.xOffset).isActive = true
+        self.logoImageView?.centerYAnchor.constraint(equalTo: self.view.centerYAnchor,
+                                                     constant: self.viewModel.logoConfig.yOffset).isActive = true
 
         self.buttonsStackView?.translatesAutoresizingMaskIntoConstraints = false
         self.buttonsStackView?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -16.0).isActive = true
