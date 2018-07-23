@@ -55,6 +55,7 @@ final public class TSQBioAuthViewController: UIViewController {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
+        self.setupUI()
         self.setupConstraints()
         self.setupBindings()
     }
@@ -68,9 +69,11 @@ final public class TSQBioAuthViewController: UIViewController {
         self.view.backgroundColor = .white
         
         self.backgroundImageView = UIImageView(frame: CGRect.zero)
+        self.backgroundImageView?.image = self.backgroundImage
 
         self.logoImageView = UIImageView(frame: CGRect.zero)
-        
+        self.logoImageView?.image = self.logoImage
+
         self.buttonsStackView = UIStackView(frame: CGRect.zero)
         self.buttonsStackView?.backgroundColor = .red
         self.buttonsStackView?.isHidden = true
@@ -182,7 +185,6 @@ extension TSQBioAuthViewController {
                               backgroundColor: UIColor = .white) -> UIViewController {
         let viewController = TSQBioAuthViewController()
         viewController.setDependencies(viewModel: viewModel)
-        viewController.setupUI()
         viewController.backgroundImage = backgroundImage
         viewController.logoImage = logoImage
         viewController.view.backgroundColor = backgroundColor
