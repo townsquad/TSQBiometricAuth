@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
     s.name             = 'TSQBiometricAuth'
     s.version          = '2.0.0'
-    s.summary          = 'A lib for biometric authentication.'
+    s.summary          = 'A lib for biometric authentication on iOS devices, implemented with Swift and Rx.'
     
     # This description is used to generate tags and improve search results.
     #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,14 +18,14 @@ Pod::Spec.new do |s|
     #   * Finally, don't worry about the indent, CocoaPods strips it!
     
     s.description      = <<-DESC
-    TSQBiometricAuth is a lib to enable the use of biometric authentication via simple ViewController usage.
+    TSQBiometricAuth is a lib to enable biometric authentication via simple ViewController usage.
     DESC
     
-    s.homepage         = 'https://bitbucket.org/socialcondo/ios-biometric-authentication/src/master/'
+    s.homepage         = 'https://github.com/townsquad/TSQBiometricAuth'
     # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
     s.license          = { :type => 'MIT', :file => 'LICENSE' }
-    s.author           = { 'Kévin Cardoso de Sá' => 'kevin@townsq.com.br' }
-    s.source           = { :git => 'https://bitbucket.org/socialcondo/ios-biometric-authentication.git', :tag => s.version.to_s }
+    s.author           = { 'Kévin Cardoso de Sá' => 'kvdesa@gmail.com' }
+    s.source           = { :git => 'https://github.com/townsquad/TSQBiometricAuth.git', :tag => s.version.to_s }
     # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
     
     s.ios.deployment_target = '9.0'
