@@ -7,7 +7,6 @@
 
 import UIKit
 import RxSwift
-import RxCocoa
 
 @available(iOS 9.0, *)
 final public class TSQBioAuthViewController: UIViewController {
@@ -152,22 +151,17 @@ final public class TSQBioAuthViewController: UIViewController {
     }
     
     private func setupBindings() {
-        
-        self.leftButton?.rx.tap.subscribe(onNext: { [weak self] _ in
-            self?.didPressleftButton()
-        }).disposed(by: self.disposeBag)
-        self.rightButton?.rx.tap.subscribe(onNext: { [weak self] _ in
-            self?.didPressrightButton()
-        }).disposed(by: self.disposeBag)
+        self.leftButton?.addTarget(self, action: #selector(self.didPressLeftButton), for: .touchUpInside)
+        self.rightButton?.addTarget(self, action: #selector(self.didPressRightButton), for: .touchUpInside)
     }
     
     // Logic
     
-    private func didPressleftButton() {
+    @objc private func didPressLeftButton() {
         self.viewModel.disableBiometricAuthentication()
     }
     
-    private func didPressrightButton() {
+    @objc private func didPressRightButton() {
         self.viewModel.performBiometricAuthentication()
     }
 }

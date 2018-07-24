@@ -18,26 +18,26 @@ class ExampleViewController: UIViewController {
     @IBAction func showAuthenticationModal() {
         
         // Setting up the font
-        guard let font = UIFont(name: "Shrikhand", size: 14.0) else {
+        guard let font = UIFont(name: "Helvetica", size: 13) else {
             return
         }
         
         // Setting up left button
         let cancelButtonConfig = TSQButtonConfiguration(cornerRadius: 5.0,
-                                                    borderColor: UIColor(hexString: "7ebc0a"),
+                                                    borderColor: UIColor(hexString: "d9d9d9"),
                                                     borderWidth: 1.0,
                                                     backgroundColor: UIColor.white,
-                                                    height: 80.0,
+                                                    height: 40.0,
                                                     text: "Cancel",
                                                     textColor: UIColor.black,
                                                     font: font)
         
         // Setting up right button
         let authenticateButtonConfig = TSQButtonConfiguration(cornerRadius: 5.0,
-                                                    borderColor: UIColor(hexString: "7ebc0a"),
+                                                    borderColor: .black,
                                                     borderWidth: 1.0,
                                                     backgroundColor: UIColor.white,
-                                                    height: 80.0,
+                                                    height: 40.0,
                                                     text: "Authenticate",
                                                     textColor: UIColor.black,
                                                     font: font)
