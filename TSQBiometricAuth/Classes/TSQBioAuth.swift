@@ -17,6 +17,38 @@ public class TSQBioAuth {
     
     public init() {}
     
+    public class func instantiateTSQBioAuthViewController(displayMessage: String,
+                                                    leftButtonConfiguration: TSQButtonConfiguration,
+                                                    rightButtonConfiguration: TSQButtonConfiguration,
+                                                    dismissWhenAuthenticationSucceeds: Bool = true,
+                                                    dismissWhenUserCancels: Bool = true,
+                                                    logoImage: UIImage,
+                                                    logoImageConfiguration: TSQImageConfiguration,
+                                                    backgroundImage: UIImage? = nil,
+                                                    backgroundImageConfiguration: TSQImageConfiguration? = nil,
+                                                    backgroundColor: UIColor? = nil) -> TSQBioAuthViewController? {
+        
+        guard let viewModel = TSQBioAuthViewModel.init(reason: displayMessage,
+                                                       leftButtonConfig: leftButtonConfiguration,
+                                                       rightButtonConfig: rightButtonConfiguration,
+                                                       dismissSuccess: dismissWhenAuthenticationSucceeds,
+                                                       dismissCancelled: dismissWhenUserCancels,
+                                                       logoImageConfig: logoImageConfiguration,
+                                                       backgroundImageConfig: backgroundImageConfiguration) else {
+                                                        return nil
+        }
+        
+        guard let viewController = TSQBioAuthViewController.create(viewModel: viewModel,
+                                                                   backgroundImage: backgroundImage,
+                                                                   logoImage: logoImage,
+                                                                   backgroundColor: backgroundColor)
+            as? TSQBioAuthViewController else {
+            return nil
+        }
+        
+        return viewController
+    }
+    
     public func canUseAuthentication() -> Bool {
         if self.context.canEvaluatePolicy(self.authenticationType, error: &self.error) {
             return true

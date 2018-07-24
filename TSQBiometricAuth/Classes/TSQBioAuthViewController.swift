@@ -40,14 +40,19 @@ final public class TSQBioAuthViewController: UIViewController {
     private var logoImageView: UIImageView?
     
     private var buttonsStackView: UIStackView?
-    private var firstButton: UIButton?
-    private var secondButton: UIButton?
+    private var leftButton: UIButton?
+    private var rightButton: UIButton?
     
     private let disposeBag = DisposeBag()
     
-    var viewModel: TSQBioAuthViewModel! {
+    private var viewModel: TSQBioAuthViewModel! {
         didSet {
-            viewModel.internalDelegate = self
+            self.viewModel.internalDelegate = self
+        }
+    }
+    public var delegate: TSQBioAuthenticationDelegate? {
+        didSet {
+            self.viewModel.delegate = self.delegate
         }
     }
     
@@ -70,42 +75,45 @@ final public class TSQBioAuthViewController: UIViewController {
         
         self.backgroundImageView = UIImageView(frame: CGRect.zero)
         self.backgroundImageView?.image = self.backgroundImage
+        if let backgroundImageConfig = self.viewModel.backgroundImageConfig {
+            self.backgroundImageView?.contentMode = backgroundImageConfig.contentMode
+        }
 
         self.logoImageView = UIImageView(frame: CGRect.zero)
         self.logoImageView?.image = self.logoImage
-        self.logoImageView?.contentMode = self.viewModel.logoConfig.contentMode
+        self.logoImageView?.contentMode = self.viewModel.logoImageConfig.contentMode
 
         self.buttonsStackView = UIStackView(frame: CGRect.zero)
         self.buttonsStackView?.backgroundColor = .red
         self.buttonsStackView?.isHidden = true
         
-        self.firstButton = UIButton(frame: CGRect.zero)
-        self.firstButton?.setTitle(self.viewModel.firstButtonConfig.text, for: .normal)
-        self.firstButton?.setTitleColor(self.viewModel.firstButtonConfig.textColor, for: .normal)
-        self.firstButton?.titleLabel?.font = self.viewModel.firstButtonConfig.font
-        self.firstButton?.layer.cornerRadius = self.viewModel.firstButtonConfig.cornerRadius
-        self.firstButton?.layer.borderColor = self.viewModel.firstButtonConfig.borderColor
-        self.firstButton?.layer.borderWidth = self.viewModel.firstButtonConfig.borderWidth
-        self.firstButton?.backgroundColor = self.viewModel.firstButtonConfig.backgroundColor
+        self.leftButton = UIButton(frame: CGRect.zero)
+        self.leftButton?.setTitle(self.viewModel.leftButtonConfig.text, for: .normal)
+        self.leftButton?.setTitleColor(self.viewModel.leftButtonConfig.textColor, for: .normal)
+        self.leftButton?.titleLabel?.font = self.viewModel.leftButtonConfig.font
+        self.leftButton?.layer.cornerRadius = self.viewModel.leftButtonConfig.cornerRadius
+        self.leftButton?.layer.borderColor = self.viewModel.leftButtonConfig.borderColor
+        self.leftButton?.layer.borderWidth = self.viewModel.leftButtonConfig.borderWidth
+        self.leftButton?.backgroundColor = self.viewModel.leftButtonConfig.backgroundColor
         
-        self.secondButton = UIButton(frame: CGRect.zero)
-        self.secondButton?.setTitle(self.viewModel.secondButtonConfig.text, for: .normal)
-        self.secondButton?.setTitleColor(self.viewModel.secondButtonConfig.textColor, for: .normal)
-        self.secondButton?.titleLabel?.font = self.viewModel.secondButtonConfig.font
-        self.secondButton?.layer.cornerRadius = self.viewModel.secondButtonConfig.cornerRadius
-        self.secondButton?.layer.borderColor = self.viewModel.secondButtonConfig.borderColor
-        self.secondButton?.layer.borderWidth = self.viewModel.secondButtonConfig.borderWidth
-        self.secondButton?.backgroundColor = self.viewModel.secondButtonConfig.backgroundColor
+        self.rightButton = UIButton(frame: CGRect.zero)
+        self.rightButton?.setTitle(self.viewModel.rightButtonConfig.text, for: .normal)
+        self.rightButton?.setTitleColor(self.viewModel.rightButtonConfig.textColor, for: .normal)
+        self.rightButton?.titleLabel?.font = self.viewModel.rightButtonConfig.font
+        self.rightButton?.layer.cornerRadius = self.viewModel.rightButtonConfig.cornerRadius
+        self.rightButton?.layer.borderColor = self.viewModel.rightButtonConfig.borderColor
+        self.rightButton?.layer.borderWidth = self.viewModel.rightButtonConfig.borderWidth
+        self.rightButton?.backgroundColor = self.viewModel.rightButtonConfig.backgroundColor
         
-        guard let firstButton = self.firstButton,
-            let secondButton = self.secondButton,
+        guard let leftButton = self.leftButton,
+            let rightButton = self.rightButton,
             let backgroundImageView = self.backgroundImageView,
             let logoImageView = self.logoImageView,
             let buttonsStackView = self.buttonsStackView else {
                 return
         }
-        self.buttonsStackView?.addArrangedSubview(firstButton)
-        self.buttonsStackView?.addArrangedSubview(secondButton)
+        self.buttonsStackView?.addArrangedSubview(leftButton)
+        self.buttonsStackView?.addArrangedSubview(rightButton)
 
         self.view.addSubview(backgroundImageView)
         self.view.addSubview(logoImageView)
@@ -113,8 +121,8 @@ final public class TSQBioAuthViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        guard let firstButton = self.firstButton,
-            let secondButton = self.secondButton else {
+        guard let leftButton = self.leftButton,
+            let rightButton = self.rightButton else {
             return
         }
         
@@ -125,12 +133,12 @@ final public class TSQBioAuthViewController: UIViewController {
         self.backgroundImageView?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
 
         self.logoImageView?.translatesAutoresizingMaskIntoConstraints = false
-        self.logoImageView?.heightAnchor.constraint(equalToConstant: self.viewModel.logoConfig.height).isActive = true
-        self.logoImageView?.widthAnchor.constraint(equalToConstant: self.viewModel.logoConfig.width).isActive = true
+        self.logoImageView?.heightAnchor.constraint(equalToConstant: self.viewModel.logoImageConfig.height).isActive = true
+        self.logoImageView?.widthAnchor.constraint(equalToConstant: self.viewModel.logoImageConfig.width).isActive = true
         self.logoImageView?.centerXAnchor.constraint(equalTo: self.view.centerXAnchor,
-                                                     constant: self.viewModel.logoConfig.xOffset).isActive = true
+                                                     constant: self.viewModel.logoImageConfig.xOffset).isActive = true
         self.logoImageView?.centerYAnchor.constraint(equalTo: self.view.centerYAnchor,
-                                                     constant: self.viewModel.logoConfig.yOffset).isActive = true
+                                                     constant: self.viewModel.logoImageConfig.yOffset).isActive = true
 
         self.buttonsStackView?.translatesAutoresizingMaskIntoConstraints = false
         self.buttonsStackView?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -16.0).isActive = true
@@ -138,28 +146,28 @@ final public class TSQBioAuthViewController: UIViewController {
         self.buttonsStackView?.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16.0).isActive = true
         self.buttonsStackView?.spacing = 16.0
 
-        firstButton.widthAnchor.constraint(equalTo: secondButton.widthAnchor, multiplier: 1.0).isActive = true
-        firstButton.heightAnchor.constraint(equalToConstant: self.viewModel.firstButtonConfig.height).isActive = true
-        secondButton.heightAnchor.constraint(equalToConstant: self.viewModel.secondButtonConfig.height).isActive = true
+        leftButton.widthAnchor.constraint(equalTo: rightButton.widthAnchor, multiplier: 1.0).isActive = true
+        leftButton.heightAnchor.constraint(equalToConstant: self.viewModel.leftButtonConfig.height).isActive = true
+        rightButton.heightAnchor.constraint(equalToConstant: self.viewModel.rightButtonConfig.height).isActive = true
     }
     
     private func setupBindings() {
         
-        self.firstButton?.rx.tap.subscribe(onNext: { [weak self] _ in
-            self?.didPressFirstButton()
+        self.leftButton?.rx.tap.subscribe(onNext: { [weak self] _ in
+            self?.didPressleftButton()
         }).disposed(by: self.disposeBag)
-        self.secondButton?.rx.tap.subscribe(onNext: { [weak self] _ in
-            self?.didPressSecondButton()
+        self.rightButton?.rx.tap.subscribe(onNext: { [weak self] _ in
+            self?.didPressrightButton()
         }).disposed(by: self.disposeBag)
     }
     
     // Logic
     
-    private func didPressFirstButton() {
+    private func didPressleftButton() {
         self.viewModel.disableBiometricAuthentication()
     }
     
-    private func didPressSecondButton() {
+    private func didPressrightButton() {
         self.viewModel.performBiometricAuthentication()
     }
 }
@@ -167,7 +175,8 @@ final public class TSQBioAuthViewController: UIViewController {
 @available(iOS 9.0, *)
 extension TSQBioAuthViewController: TSQBioAuthenticationInternalDelegate {
     func authenticationFinishedWithState(state: TSQBioAuthState) {
-        if state == .success || state == TSQBioAuthState.cancelledByUser {
+        if (state == .success && self.viewModel.dismissSuccess) ||
+            (state == .cancelledByUser && self.viewModel.dismissCancelled) {
             self.dismiss(animated: true, completion: nil)
         } else {
             DispatchQueue.main.async {
@@ -181,15 +190,15 @@ extension TSQBioAuthViewController: TSQBioAuthenticationInternalDelegate {
 
 @available(iOS 9.0, *)
 extension TSQBioAuthViewController {
-    static public func create(viewModel: TSQBioAuthViewModel,
+    static func create(viewModel: TSQBioAuthViewModel,
                               backgroundImage: UIImage? = nil,
                               logoImage: UIImage? = nil,
-                              backgroundColor: UIColor = .white) -> UIViewController {
+                              backgroundColor: UIColor?) -> UIViewController {
         let viewController = TSQBioAuthViewController()
         viewController.setDependencies(viewModel: viewModel)
         viewController.backgroundImage = backgroundImage
         viewController.logoImage = logoImage
-        viewController.view.backgroundColor = backgroundColor
+        viewController.view.backgroundColor = backgroundColor ?? .white
         
         return viewController
     }

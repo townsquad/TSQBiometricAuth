@@ -8,56 +8,8 @@
 import RxSwift
 import Foundation
 
-public struct TSQImageConfiguration {
-    let height: CGFloat
-    let width: CGFloat
-    let xOffset: CGFloat
-    let yOffset: CGFloat
-    let contentMode: UIViewContentMode
-    
-    public init(height: CGFloat = 80,
-                width: CGFloat = 80,
-                xOffset: CGFloat = 0,
-                yOffset: CGFloat = 0,
-                contentMode: UIViewContentMode = .scaleToFill) {
-        self.height = height
-        self.width = width
-        self.xOffset = xOffset
-        self.yOffset = yOffset
-        self.contentMode = contentMode
-    }
-}
-public struct TSQButtonConfiguration {
-    let cornerRadius: CGFloat
-    let borderColor: CGColor
-    let borderWidth: CGFloat
-    let backgroundColor: UIColor
-    let height: CGFloat
-    let text: String
-    let textColor: UIColor
-    let font: UIFont
-    
-    public init(cornerRadius: CGFloat = 5.0,
-         borderColor: UIColor = UIColor.white,
-         borderWidth: CGFloat = 1.0,
-         backgroundColor: UIColor = UIColor.white,
-         height: CGFloat = 40.0,
-         text: String = "",
-         textColor: UIColor = UIColor.black,
-         font: UIFont = UIFont.systemFont(ofSize: 14.0)) {
-        self.cornerRadius = cornerRadius
-        self.borderColor = borderColor.cgColor
-        self.borderWidth = borderWidth
-        self.backgroundColor = backgroundColor
-        self.height = height
-        self.text = text
-        self.textColor = textColor
-        self.font = font
-    }
-}
-
 public protocol TSQBioAuthenticationDelegate: AnyObject {
-    func authenticationSuccess()
+    func authenticationSucceeded()
     func authenticationDisabledByUserChoice()
 }
 
@@ -65,23 +17,26 @@ protocol TSQBioAuthenticationInternalDelegate: AnyObject {
     func authenticationFinishedWithState(state: TSQBioAuthState)
 }
 
-public enum TSQBioAuthState {
+enum TSQBioAuthState {
     case success
     case cancelledByUser
     case error
 }
 
-public class TSQBioAuthViewModel {
+class TSQBioAuthViewModel {
     
     // MARK: Properties
     
-    let firstButtonConfig: TSQButtonConfiguration
-    let secondButtonConfig: TSQButtonConfiguration
-    let logoConfig: TSQImageConfiguration
+    let leftButtonConfig: TSQButtonConfiguration
+    let rightButtonConfig: TSQButtonConfiguration
+    let logoImageConfig: TSQImageConfiguration
+    let backgroundImageConfig: TSQImageConfiguration?
+    let dismissSuccess: Bool
+    let dismissCancelled: Bool
     
     weak var internalDelegate: TSQBioAuthenticationInternalDelegate?
-    public weak var delegate: TSQBioAuthenticationDelegate?
-    public let bioAuthState = PublishSubject<TSQBioAuthState>()
+    weak var delegate: TSQBioAuthenticationDelegate?
+    let bioAuthState = PublishSubject<TSQBioAuthState>()
     
     private let reason: String
     private let tsqBioAuth: TSQBioAuth
@@ -90,15 +45,21 @@ public class TSQBioAuthViewModel {
     // MARK: Initialization
     
     public init?(reason: String,
-                 firstButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
-                 secondButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
-                 logoConfig: TSQImageConfiguration = TSQImageConfiguration()) {
+                 leftButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
+                 rightButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
+                 dismissSuccess: Bool,
+                 dismissCancelled: Bool,
+                 logoImageConfig: TSQImageConfiguration = TSQImageConfiguration(),
+                 backgroundImageConfig: TSQImageConfiguration? = nil) {
         self.tsqBioAuth = TSQBioAuth()
         if self.tsqBioAuth.canUseAuthentication() {
             self.reason = reason
-            self.firstButtonConfig = firstButtonConfig
-            self.secondButtonConfig = secondButtonConfig
-            self.logoConfig = logoConfig
+            self.leftButtonConfig = leftButtonConfig
+            self.rightButtonConfig = rightButtonConfig
+            self.logoImageConfig = logoImageConfig
+            self.backgroundImageConfig = backgroundImageConfig
+            self.dismissSuccess = dismissSuccess
+            self.dismissCancelled = dismissCancelled
         } else {
             return nil
         }
@@ -120,7 +81,7 @@ public class TSQBioAuthViewModel {
     
     private func onAuthenticationSuccess() {
         self.internalDelegate?.authenticationFinishedWithState(state: .success)
-        self.delegate?.authenticationSuccess()
+        self.delegate?.authenticationSucceeded()
         self.bioAuthState.onNext(.success)
     }
     
