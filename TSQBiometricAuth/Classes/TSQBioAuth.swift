@@ -52,8 +52,13 @@ public class TSQBioAuth {
         return viewController
     }
     
-    public func canUseAuthentication(authenticationType: LAPolicy? = nil) -> Bool {
-        let authenticationType = authenticationType ?? self.authenticationType
+    public func canUseAuthentication(onlyBiometrics: Bool? = nil) -> Bool {
+        let authenticationType: LAPolicy
+        if let onlyBiometrics = onlyBiometrics {
+            authenticationType = onlyBiometrics ? .deviceOwnerAuthenticationWithBiometrics : .deviceOwnerAuthentication
+        } else {
+            authenticationType = self.authenticationType
+        }
         if self.context.canEvaluatePolicy(authenticationType, error: &self.error) {
             return true
         }
