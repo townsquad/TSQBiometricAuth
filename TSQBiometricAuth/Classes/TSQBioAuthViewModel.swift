@@ -50,14 +50,15 @@ class TSQBioAuthViewModel {
     
     // MARK: Initialization
     
-    public init?(reason: String,
+    public init?(onlyBiometrics: Bool = true,
+                 reason: String,
                  leftButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
                  rightButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
                  dismissSuccess: Bool,
                  dismissCancelled: Bool,
                  logoImageConfig: TSQImageConfiguration = TSQImageConfiguration(),
                  backgroundImageConfig: TSQImageConfiguration? = nil) {
-        self.tsqBioAuth = TSQBioAuth()
+        self.tsqBioAuth = TSQBioAuth(onlyBiometrics: onlyBiometrics)
         if self.tsqBioAuth.canUseAuthentication() {
             self.reason = reason
             self.leftButtonConfig = leftButtonConfig

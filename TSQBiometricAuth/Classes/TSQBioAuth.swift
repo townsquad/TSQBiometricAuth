@@ -13,20 +13,22 @@ public class TSQBioAuth {
     
     private let context = LAContext()
     private var error: NSError?
-    private let authenticationType = LAPolicy.deviceOwnerAuthentication
+    private let authenticationType: LAPolicy
     
-    public init() {}
+    public init(onlyBiometrics: Bool) {
+        self.authenticationType = onlyBiometrics ? .deviceOwnerAuthenticationWithBiometrics : .deviceOwnerAuthentication
+    }
     
     public class func instantiateTSQBioAuthViewController(displayMessage: String,
-                                                    leftButtonConfiguration: TSQButtonConfiguration,
-                                                    rightButtonConfiguration: TSQButtonConfiguration,
-                                                    dismissWhenAuthenticationSucceeds: Bool = true,
-                                                    dismissWhenUserCancels: Bool = true,
-                                                    logoImage: UIImage,
-                                                    logoImageConfiguration: TSQImageConfiguration,
-                                                    backgroundImage: UIImage? = nil,
-                                                    backgroundImageConfiguration: TSQImageConfiguration? = nil,
-                                                    backgroundColor: UIColor? = nil) -> TSQBioAuthViewController? {
+                                                          leftButtonConfiguration: TSQButtonConfiguration,
+                                                          rightButtonConfiguration: TSQButtonConfiguration,
+                                                          dismissWhenAuthenticationSucceeds: Bool = true,
+                                                          dismissWhenUserCancels: Bool = true,
+                                                          logoImage: UIImage,
+                                                          logoImageConfiguration: TSQImageConfiguration,
+                                                          backgroundImage: UIImage? = nil,
+                                                          backgroundImageConfiguration: TSQImageConfiguration? = nil,
+                                                          backgroundColor: UIColor? = nil) -> TSQBioAuthViewController? {
         
         guard let viewModel = TSQBioAuthViewModel.init(reason: displayMessage,
                                                        leftButtonConfig: leftButtonConfiguration,
