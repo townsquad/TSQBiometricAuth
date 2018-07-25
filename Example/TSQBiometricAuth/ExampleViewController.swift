@@ -6,10 +6,14 @@
 //  Copyright (c) 2018 Kévin Cardoso de Sá. All rights reserved.
 //
 
+import RxSwift
 import UIKit
 import TSQBiometricAuth
+import LocalAuthentication
 
 class ExampleViewController: UIViewController {
+    
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,18 +63,47 @@ class ExampleViewController: UIViewController {
                                                  backgroundColor: UIColor(hexString: "d9d9d9")) else {
             return
         }
+        // Conform to the protocol
         viewController.delegate = self
+        // OR
+        // Use the Reactive solution and subscribe!!
+        viewController.authenticationState.subscribe(onNext: { (state) in
+            switch state {
+            case .success:
+                print("Authentication Succeeded")
+            case .error(code: let errorCode):
+                switch errorCode {
+                case LAError.Code.userCancel.rawValue:
+                    print("User cancelled")
+                default:
+                    print("Authentication Failed with error: \(errorCode)")
+                }
+            case .disabledByUserChoice:
+                print("Authentication Disabled by User Choice")
+            }
+        }).disposed(by: self.disposeBag)
         
         self.present(viewController, animated: true, completion: nil)
     }
 }
 
+// Implement the protocol
 extension ExampleViewController: TSQBioAuthenticationDelegate {
-    func authenticationSucceeded() {
-        print("succeded")
+    func authenticationFailed(withErrorCode errorCode: Int) {
+        switch errorCode {
+        case LAError.Code.userCancel.rawValue:
+            print("User cancelled")
+        default:
+            print("Authentication Failed with error: \(errorCode)")
+        }
     }
+    
+    func authenticationSucceeded() {
+        print("Authentication Succeeded")
+    }
+    
     func authenticationDisabledByUserChoice() {
-        print("disabled by user choice")
+        print("Authentication Disabled by User Choice")
     }
 }
 

@@ -54,6 +54,7 @@ final public class TSQBioAuthViewController: UIViewController {
             self.viewModel.delegate = self.delegate
         }
     }
+    public lazy var authenticationState: Observable<TSQBioAuthState> = self.viewModel.bioAuthState.asObservable()
     
     // MARK: Initialization
     
@@ -169,10 +170,18 @@ final public class TSQBioAuthViewController: UIViewController {
 @available(iOS 9.0, *)
 extension TSQBioAuthViewController: TSQBioAuthenticationInternalDelegate {
     func authenticationFinishedWithState(state: TSQBioAuthState) {
-        if (state == .success && self.viewModel.dismissSuccess) ||
-            (state == .cancelledByUser && self.viewModel.dismissCancelled) {
-            self.dismiss(animated: true, completion: nil)
-        } else {
+        switch state {
+        case .success:
+            if self.viewModel.dismissSuccess {
+                self.dismiss(animated: true, completion: nil)
+                return
+            }
+        case .disabledByUserChoice:
+            if self.viewModel.dismissCancelled {
+                self.dismiss(animated: true, completion: nil)
+                return
+            }
+        case .error:
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.3, animations: {
                     self.buttonsStackView?.isHidden = false

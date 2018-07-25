@@ -67,7 +67,7 @@ public class TSQBioAuth {
                     observer.onNext(true)
                     observer.onCompleted()
                 } else {
-                    observer.onError(NSError(domain: error?.localizedDescription ?? "TSQBioAuth",
+                    observer.onError(NSError(domain: error?.localizedDescription ?? "Authentication Failed",
                                              code: error?._code ?? 0,
                                              userInfo: nil))
                 }

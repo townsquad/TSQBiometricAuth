@@ -7,20 +7,22 @@
 
 import RxSwift
 import Foundation
+import LocalAuthentication
 
 public protocol TSQBioAuthenticationDelegate: AnyObject {
     func authenticationSucceeded()
     func authenticationDisabledByUserChoice()
+    func authenticationFailed(withErrorCode errorCode: Int)
 }
 
 protocol TSQBioAuthenticationInternalDelegate: AnyObject {
     func authenticationFinishedWithState(state: TSQBioAuthState)
 }
 
-enum TSQBioAuthState {
+public enum TSQBioAuthState {
     case success
-    case cancelledByUser
-    case error
+    case disabledByUserChoice
+    case error(code: Int)
 }
 
 class TSQBioAuthViewModel {
@@ -71,11 +73,12 @@ class TSQBioAuthViewModel {
         if self.tsqBioAuth.canUseAuthentication() {
             self.tsqBioAuth.authenticate(self.reason).subscribe(onNext: { [weak self] (_) in
                 self?.onAuthenticationSuccess()
-            }, onError: { [weak self] (_) in
-                self?.onAuthenticationError()
+            }, onError: { [weak self] (error) in
+                let errorCode = error._code
+                self?.onAuthenticationFail(withErrorCode: errorCode)
             }).disposed(by: self.disposeBag)
         } else {
-            self.onAuthenticationError()
+            self.onAuthenticationFail(withErrorCode: LAError.Code.authenticationFailed.rawValue)
         }
     }
     
@@ -85,14 +88,15 @@ class TSQBioAuthViewModel {
         self.bioAuthState.onNext(.success)
     }
     
-    private func onAuthenticationError() {
-        self.internalDelegate?.authenticationFinishedWithState(state: .error)
-        self.bioAuthState.onNext(.error)
+    private func onAuthenticationFail(withErrorCode errorCode: Int) {
+        self.internalDelegate?.authenticationFinishedWithState(state: .error(code: errorCode))
+        self.delegate?.authenticationFailed(withErrorCode: errorCode)
+        self.bioAuthState.onNext(.error(code: errorCode))
     }
     
     func disableBiometricAuthentication() {
-        self.internalDelegate?.authenticationFinishedWithState(state: .cancelledByUser)
+        self.internalDelegate?.authenticationFinishedWithState(state: .disabledByUserChoice)
         self.delegate?.authenticationDisabledByUserChoice()
-        self.bioAuthState.onNext(.cancelledByUser)
+        self.bioAuthState.onNext(.disabledByUserChoice)
     }
 }
