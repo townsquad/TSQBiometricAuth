@@ -4,6 +4,9 @@
 [![License](https://img.shields.io/cocoapods/l/TSQBiometricAuth.svg?style=flat)](https://cocoapods.org/pods/TSQBiometricAuth)
 [![Platform](https://img.shields.io/cocoapods/p/TSQBiometricAuth.svg?style=flat)](https://cocoapods.org/pods/TSQBiometricAuth)
 
+![open-cancel](https://github.com/townsquad/TSQBiometricAuth/blob/master/readmeImages/open-cancel.gif)
+![open-error-success](https://github.com/townsquad/TSQBiometricAuth/blob/master/readmeImages/open-error-success.gif)
+
 ## Description
 
 TSBiometricAuth is a library to make biometric authentication simple. It embeds Appple's [LocalAuthentication](https://developer.apple.com/documentation/localauthentication/) framework and notifies authentication result via a Delegate.
