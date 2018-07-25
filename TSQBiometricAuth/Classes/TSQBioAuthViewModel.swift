@@ -44,13 +44,14 @@ class TSQBioAuthViewModel {
     weak var delegate: TSQBioAuthenticationDelegate?
     let bioAuthState = PublishSubject<TSQBioAuthState>()
     
+    let onlyBiometrics: Bool
     private let reason: String
     private let tsqBioAuth: TSQBioAuth
     private let disposeBag = DisposeBag()
     
     // MARK: Initialization
     
-    public init?(onlyBiometrics: Bool = true,
+    public init?(onlyBiometrics: Bool = false,
                  reason: String,
                  leftButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
                  rightButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
@@ -60,6 +61,7 @@ class TSQBioAuthViewModel {
                  backgroundImageConfig: TSQImageConfiguration? = nil) {
         self.tsqBioAuth = TSQBioAuth(onlyBiometrics: onlyBiometrics)
         if self.tsqBioAuth.canUseAuthentication() {
+            self.onlyBiometrics = onlyBiometrics
             self.reason = reason
             self.leftButtonConfig = leftButtonConfig
             self.rightButtonConfig = rightButtonConfig
@@ -76,7 +78,8 @@ class TSQBioAuthViewModel {
     
     func performBiometricAuthentication() {
         if self.tsqBioAuth.canUseAuthentication() {
-            self.tsqBioAuth.authenticate(self.reason).subscribe(onNext: { [weak self] (_) in
+            self.tsqBioAuth.authenticate(message: self.reason)
+                .subscribe(onNext: { [weak self] (_) in
                 self?.onAuthenticationSuccess()
             }, onError: { [weak self] (error) in
                 let errorCode = error._code

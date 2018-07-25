@@ -7,6 +7,7 @@
 
 import UIKit
 import RxSwift
+import LocalAuthentication
 
 @available(iOS 9.0, *)
 final public class TSQBioAuthViewController: UIViewController {
@@ -181,11 +182,15 @@ extension TSQBioAuthViewController: TSQBioAuthenticationInternalDelegate {
                 self.dismiss(animated: true, completion: nil)
                 return
             }
-        case .error:
-            DispatchQueue.main.async {
-                UIView.animate(withDuration: 0.3, animations: {
-                    self.buttonsStackView?.isHidden = false
-                })
+        case .error(code: let errorCode):
+            if errorCode == LAError.Code.userFallback.rawValue && self.viewModel.onlyBiometrics {
+                self.viewModel.disableBiometricAuthentication()
+            } else {
+                DispatchQueue.main.async {
+                    UIView.animate(withDuration: 0.3, animations: {
+                        self.buttonsStackView?.isHidden = false
+                    })
+                }
             }
         }
     }
