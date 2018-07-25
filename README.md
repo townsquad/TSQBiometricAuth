@@ -61,6 +61,33 @@ Customize the UI and behaviour of TSQBioAuthViewController through its init para
 | backgroundImageConfiguration | TSQImageConfiguration | Defines the backgroundImage configuration. <br> **Default: nil** |
 | backgroundColor | UIColor | The ViewController's background color. <br> **Default: nil** |
 
+### TSQButtonConfiguration
+
+Simple wrapper to configure a UIButton.
+
+| Param name | Type | Default value |
+| ------ | ------ | ------ |
+| cornerRadius | CGFloat | 5 |
+| borderColor | UIColor | .white |
+| borderWidth | CGFloat | 1 |
+| backgroundColor | UIColor | .white |
+| height | CGFloat | 40 |
+| text | String | "" |
+| textColor | UIColor | .black |
+| font | UIFont | .systemFont(ofSize: 14.0) |
+
+### TSQImageConfiguration
+
+Simple wrapper to configure a UIImage.
+
+| Param name | Type | Default value |
+| ------ | ------ | ------ |
+| height | CGFloat | 80 |
+| width | CGFloat | 80 |
+| xOffset | CGFloat | 0 |
+| yOffset | CGFloat | 0 |
+| contentMode | UIViewContentMode | .scaleToFill |
+
 ## Listening to autentication state changes
 
 There are 2 ways to do so, through the delegate or Rx subscription.
