@@ -9,7 +9,7 @@
 
 ## Description
 
-TSBiometricAuth is a library to make biometric authentication simple. It embeds Appple's [LocalAuthentication](https://developer.apple.com/documentation/localauthentication/) framework and notifies authentication result via a Delegate.
+TSBiometricAuth is a library to make biometric authentication simple. It embeds Apple's [LocalAuthentication](https://developer.apple.com/documentation/localauthentication/) framework and notifies authentication result via a Delegate.
 
 ## Requirements
 
