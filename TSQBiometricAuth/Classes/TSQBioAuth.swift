@@ -52,8 +52,9 @@ public class TSQBioAuth {
         return viewController
     }
     
-    public func canUseAuthentication() -> Bool {
-        if self.context.canEvaluatePolicy(self.authenticationType, error: &self.error) {
+    public func canUseAuthentication(authenticationType: LAPolicy? = nil) -> Bool {
+        let authenticationType = authenticationType ?? self.authenticationType
+        if self.context.canEvaluatePolicy(authenticationType, error: &self.error) {
             return true
         }
         return false
