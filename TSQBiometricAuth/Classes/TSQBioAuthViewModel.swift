@@ -15,6 +15,10 @@ public protocol TSQBioAuthenticationDelegate: AnyObject {
     func authenticationFailed(withErrorCode errorCode: Int)
 }
 
+public extension TSQBioAuthenticationDelegate {
+    func authenticationFailed(withErrorCode errorCode: Int) {}
+}
+
 protocol TSQBioAuthenticationInternalDelegate: AnyObject {
     func authenticationFinishedWithState(state: TSQBioAuthState)
 }
