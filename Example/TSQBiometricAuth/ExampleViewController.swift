@@ -20,7 +20,9 @@ class ExampleViewController: UIViewController {
     }
 
     @IBAction func showAuthenticationModal() {
-        let tsqBioAuth = TSQBioAuth(onlyBiometrics: false)
+        let tsqBioAuth = TSQBioAuth(authenticationType: .biometricAndPasscode,
+                                    authenticationMessage: "Auth Message",
+                                    fallbackTitle: "Fallback Title")
         
         // Setting up the font
         guard let font = UIFont(name: "Helvetica", size: 13) else {
@@ -56,8 +58,7 @@ class ExampleViewController: UIViewController {
                                                     contentMode: .scaleToFill)
         
         guard let viewController = tsqBioAuth
-            .instantiateTSQBioAuthViewController(displayMessage: "Message shown when asking users for their fingerprint",
-                                                 leftButtonConfiguration: cancelButtonConfig,
+            .instantiateTSQBioAuthViewController(leftButtonConfiguration: cancelButtonConfig,
                                                  rightButtonConfiguration: authenticateButtonConfig,
                                                  logoImage: logoImage,
                                                  logoImageConfiguration: logoImageConfig,

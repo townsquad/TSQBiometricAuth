@@ -44,25 +44,20 @@ class TSQBioAuthViewModel {
     weak var delegate: TSQBioAuthenticationDelegate?
     let bioAuthState = PublishSubject<TSQBioAuthState>()
     
-    let onlyBiometrics: Bool
-    private let reason: String
-    private let tsqBioAuth: TSQBioAuth
+    let tsqBioAuth: TSQBioAuth
     private let disposeBag = DisposeBag()
     
     // MARK: Initialization
     
-    public init?(onlyBiometrics: Bool = false,
-                 reason: String,
-                 leftButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
-                 rightButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
-                 dismissSuccess: Bool,
-                 dismissCancelled: Bool,
-                 logoImageConfig: TSQImageConfiguration = TSQImageConfiguration(),
-                 backgroundImageConfig: TSQImageConfiguration? = nil) {
-        self.tsqBioAuth = TSQBioAuth(onlyBiometrics: onlyBiometrics)
+    init?(tsqBioAuth: TSQBioAuth,
+          leftButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
+          rightButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
+          dismissSuccess: Bool,
+          dismissCancelled: Bool,
+          logoImageConfig: TSQImageConfiguration = TSQImageConfiguration(),
+          backgroundImageConfig: TSQImageConfiguration? = nil) {
+        self.tsqBioAuth = tsqBioAuth
         if self.tsqBioAuth.canUseAuthentication() {
-            self.onlyBiometrics = onlyBiometrics
-            self.reason = reason
             self.leftButtonConfig = leftButtonConfig
             self.rightButtonConfig = rightButtonConfig
             self.logoImageConfig = logoImageConfig
@@ -78,7 +73,7 @@ class TSQBioAuthViewModel {
     
     func performBiometricAuthentication() {
         if self.tsqBioAuth.canUseAuthentication() {
-            self.tsqBioAuth.authenticate(message: self.reason)
+            self.tsqBioAuth.authenticate()
                 .subscribe(onNext: { [weak self] (_) in
                 self?.onAuthenticationSuccess()
             }, onError: { [weak self] (error) in

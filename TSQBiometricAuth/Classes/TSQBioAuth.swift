@@ -9,18 +9,53 @@ import RxSwift
 import Foundation
 import LocalAuthentication
 
+public enum TSQBioAuthType {
+    case biometricOnly
+    case biometricAndPasscode
+    
+    fileprivate func convertToLAPolicy() -> LAPolicy {
+        switch self {
+        case .biometricOnly:
+            return LAPolicy.deviceOwnerAuthenticationWithBiometrics
+        case .biometricAndPasscode:
+            return LAPolicy.deviceOwnerAuthentication
+        }
+    }
+    
+    fileprivate static func fromLAPolicy(policy: LAPolicy) -> TSQBioAuthType {
+        switch policy {
+        case .deviceOwnerAuthenticationWithBiometrics:
+            return .biometricOnly
+        case .deviceOwnerAuthentication:
+            return .biometricAndPasscode
+        }
+    }
+}
+
 public class TSQBioAuth {
     
     private let context = LAContext()
     private var error: NSError?
-    private let authenticationType: LAPolicy
     
-    public init(onlyBiometrics: Bool) {
-        self.authenticationType = onlyBiometrics ? .deviceOwnerAuthenticationWithBiometrics : .deviceOwnerAuthentication
+    private let authenticationType: LAPolicy
+    private let authenticationMessage: String
+    
+    public init(authenticationType: TSQBioAuthType,
+                authenticationMessage: String,
+                fallbackTitle: String? = nil,
+                cancelTitle: String? = nil) {
+        self.authenticationType = authenticationType.convertToLAPolicy()
+        self.authenticationMessage = authenticationMessage
+        self.context.localizedFallbackTitle = fallbackTitle
+        if #available(iOS 10.0, *) {
+            self.context.localizedCancelTitle = cancelTitle
+        }
     }
     
-    public func instantiateTSQBioAuthViewController(displayMessage: String,
-                                                    leftButtonConfiguration: TSQButtonConfiguration,
+    //
+    // Instantiates and returns the ViewController responsible for handling the authentication
+    //
+    public func instantiateTSQBioAuthViewController(leftButtonConfiguration: TSQButtonConfiguration,
                                                     rightButtonConfiguration: TSQButtonConfiguration,
                                                     dismissWhenAuthenticationSucceeds: Bool = true,
                                                     dismissWhenUserCancels: Bool = true,
@@ -29,9 +64,7 @@ public class TSQBioAuth {
                                                     backgroundImage: UIImage? = nil,
                                                     backgroundImageConfiguration: TSQImageConfiguration? = nil,
                                                     backgroundColor: UIColor? = nil) -> TSQBioAuthViewController? {
-        let onlyBiometrics = self.authenticationType == .deviceOwnerAuthenticationWithBiometrics
-        guard let viewModel = TSQBioAuthViewModel.init(onlyBiometrics: onlyBiometrics,
-                                                       reason: displayMessage,
+        guard let viewModel = TSQBioAuthViewModel.init(tsqBioAuth: self,
                                                        leftButtonConfig: leftButtonConfiguration,
                                                        rightButtonConfig: rightButtonConfiguration,
                                                        dismissSuccess: dismissWhenAuthenticationSucceeds,
@@ -52,22 +85,29 @@ public class TSQBioAuth {
         return viewController
     }
     
-    public func canUseAuthentication(onlyBiometrics: Bool? = nil) -> Bool {
-        let authenticationType: LAPolicy
-        if let onlyBiometrics = onlyBiometrics {
-            authenticationType = onlyBiometrics ? .deviceOwnerAuthenticationWithBiometrics : .deviceOwnerAuthentication
+    //
+    // Verifies if a authenticationType can be performed
+    //
+    public func canUseAuthentication(authenticationType: TSQBioAuthType? = nil) -> Bool {
+        let authenticationTypeToEvaluate: LAPolicy
+        if let authenticationType = authenticationType {
+            authenticationTypeToEvaluate = authenticationType.convertToLAPolicy()
         } else {
-            authenticationType = self.authenticationType
+            authenticationTypeToEvaluate = self.authenticationType
         }
-        if self.context.canEvaluatePolicy(authenticationType, error: &self.error) {
+        if self.context.canEvaluatePolicy(authenticationTypeToEvaluate, error: &self.error) {
             return true
         }
         return false
     }
     
-    public func authenticate(message: String) -> Observable<Bool> {
+    //
+    // Perform the authentication based on the authenticationType sent in this class' initializer
+    //
+    public func authenticate() -> Observable<Bool> {
         let observable: Observable<Bool> = Observable.create { [weak self] (observer) -> Disposable in
-            guard let authenticationType = self?.authenticationType else {
+            guard let authenticationType = self?.authenticationType,
+                let message = self?.authenticationMessage else {
                 observer.onError(NSError(domain: "Authentication Failed",
                                          code: 1,
                                          userInfo: nil))
@@ -87,5 +127,9 @@ public class TSQBioAuth {
             return Disposables.create()
         }
         return observable
+    }
+    
+    func getAuthenticationType() -> TSQBioAuthType {
+        return TSQBioAuthType.fromLAPolicy(policy: self.authenticationType)
     }
 }

@@ -183,7 +183,8 @@ extension TSQBioAuthViewController: TSQBioAuthenticationInternalDelegate {
                 return
             }
         case .error(code: let errorCode):
-            if errorCode == LAError.Code.userFallback.rawValue && self.viewModel.onlyBiometrics {
+            let authType = self.viewModel.tsqBioAuth.getAuthenticationType()
+            if errorCode == LAError.Code.userFallback.rawValue && authType == .biometricOnly {
                 self.viewModel.disableBiometricAuthentication()
             } else {
                 DispatchQueue.main.async {
