@@ -126,25 +126,33 @@ final public class TSQBioAuthViewController: UIViewController {
             let rightButton = self.rightButton else {
             return
         }
+        let layoutGuide: UILayoutGuide
+        if #available(iOS 11.0, *) {
+            layoutGuide = self.view.safeAreaLayoutGuide
+        } else {
+            layoutGuide = self.view.layoutMarginsGuide
+        }
         
         self.backgroundImageView?.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundImageView?.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        self.backgroundImageView?.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-        self.backgroundImageView?.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
-        self.backgroundImageView?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        self.backgroundImageView?.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor).isActive = true
+        self.backgroundImageView?.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor).isActive = true
+        self.backgroundImageView?.topAnchor.constraint(equalTo: layoutGuide.topAnchor).isActive = true
+        self.backgroundImageView?.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor).isActive = true
 
         self.logoImageView?.translatesAutoresizingMaskIntoConstraints = false
         self.logoImageView?.heightAnchor.constraint(equalToConstant: self.viewModel.logoImageConfig.height).isActive = true
         self.logoImageView?.widthAnchor.constraint(equalToConstant: self.viewModel.logoImageConfig.width).isActive = true
-        self.logoImageView?.centerXAnchor.constraint(equalTo: self.view.centerXAnchor,
+        self.logoImageView?.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor,
                                                      constant: self.viewModel.logoImageConfig.xOffset).isActive = true
-        self.logoImageView?.centerYAnchor.constraint(equalTo: self.view.centerYAnchor,
+        self.logoImageView?.centerYAnchor.constraint(equalTo: layoutGuide.centerYAnchor,
                                                      constant: self.viewModel.logoImageConfig.yOffset).isActive = true
 
         self.buttonsStackView?.translatesAutoresizingMaskIntoConstraints = false
-        self.buttonsStackView?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -16.0).isActive = true
-        self.buttonsStackView?.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16.0).isActive = true
-        self.buttonsStackView?.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16.0).isActive = true
+        self.buttonsStackView?.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor,
+                                                       constant: -16.0).isActive = true
+        self.buttonsStackView?.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor,
+                                                        constant: 16.0).isActive = true
+        self.buttonsStackView?.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -16.0).isActive = true
         self.buttonsStackView?.spacing = 16.0
 
         leftButton.widthAnchor.constraint(equalTo: rightButton.widthAnchor, multiplier: 1.0).isActive = true

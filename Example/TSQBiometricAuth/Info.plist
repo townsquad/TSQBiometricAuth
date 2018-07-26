@@ -39,5 +39,7 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 	</array>
+	<key>NSFaceIDUsageDescription</key>
+	<string>&quot;Access your account&quot;</string>
 </dict>
 </plist>
