@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'TSQBiometricAuth'
-    s.version          = '2.0.11'
+    s.version          = '2.0.12'
     s.summary          = 'A lib for biometric authentication on iOS devices, implemented with Swift and Rx.'
     
     # This description is used to generate tags and improve search results.

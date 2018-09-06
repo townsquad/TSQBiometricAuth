@@ -59,11 +59,13 @@ public class TSQBioAuth {
                                                     rightButtonConfiguration: TSQButtonConfiguration,
                                                     dismissWhenAuthenticationSucceeds: Bool = true,
                                                     dismissWhenUserCancels: Bool = true,
-                                                    logoImage: UIImage,
-                                                    logoImageConfiguration: TSQImageConfiguration,
+                                                    logoImage: UIImage? = nil,
+                                                    logoImageConfiguration: TSQImageConfiguration? = nil,
                                                     backgroundImage: UIImage? = nil,
                                                     backgroundImageConfiguration: TSQImageConfiguration? = nil,
-                                                    backgroundColor: UIColor? = nil) -> TSQBioAuthViewController? {
+                                                    backgroundColor: UIColor? = nil,
+                                                    blurEffect: UIBlurEffect? = nil,
+                                                    blurAlpha: CGFloat = 0.7) -> TSQBioAuthViewController? {
         guard let viewModel = TSQBioAuthViewModel.init(tsqBioAuth: self,
                                                        leftButtonConfig: leftButtonConfiguration,
                                                        rightButtonConfig: rightButtonConfiguration,
@@ -77,7 +79,9 @@ public class TSQBioAuth {
         guard let viewController = TSQBioAuthViewController.create(viewModel: viewModel,
                                                                    backgroundImage: backgroundImage,
                                                                    logoImage: logoImage,
-                                                                   backgroundColor: backgroundColor)
+                                                                   backgroundColor: backgroundColor,
+                                                                   blurEffect: blurEffect,
+                                                                   blurAlpha: blurAlpha)
             as? TSQBioAuthViewController else {
             return nil
         }

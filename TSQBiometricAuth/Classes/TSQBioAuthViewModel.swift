@@ -35,7 +35,7 @@ class TSQBioAuthViewModel {
     
     let leftButtonConfig: TSQButtonConfiguration
     let rightButtonConfig: TSQButtonConfiguration
-    let logoImageConfig: TSQImageConfiguration
+    let logoImageConfig: TSQImageConfiguration?
     let backgroundImageConfig: TSQImageConfiguration?
     let dismissSuccess: Bool
     let dismissCancelled: Bool
@@ -54,7 +54,7 @@ class TSQBioAuthViewModel {
           rightButtonConfig: TSQButtonConfiguration = TSQButtonConfiguration(),
           dismissSuccess: Bool,
           dismissCancelled: Bool,
-          logoImageConfig: TSQImageConfiguration = TSQImageConfiguration(),
+          logoImageConfig: TSQImageConfiguration? = nil,
           backgroundImageConfig: TSQImageConfiguration? = nil) {
         self.tsqBioAuth = tsqBioAuth
         if self.tsqBioAuth.canUseAuthentication() {

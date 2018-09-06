@@ -14,7 +14,7 @@ final public class TSQBioAuthViewController: UIViewController {
     
     // MARK: Properties
     
-    public var backgroundImage: UIImage? = nil {
+    public var backgroundImage: UIImage? {
         didSet {
             guard let image = self.backgroundImage else {
                 self.backgroundImageView?.isHidden = true
@@ -25,7 +25,7 @@ final public class TSQBioAuthViewController: UIViewController {
         }
     }
     
-    public var logoImage: UIImage? = nil {
+    public var logoImage: UIImage? {
         didSet {
             guard let image = self.logoImage else {
                 self.logoImageView?.isHidden = true
@@ -36,6 +36,19 @@ final public class TSQBioAuthViewController: UIViewController {
         }
     }
     
+    public var blurEffect: UIBlurEffect? {
+        didSet {
+            self.blurView?.effect = self.blurEffect
+        }
+    }
+    
+    public var blurAlpha: CGFloat = 1.0 {
+        didSet {
+            self.blurView?.alpha = self.blurAlpha
+        }
+    }
+    
+    private var blurView: UIVisualEffectView?
     private var backgroundImageView: UIImageView?
     private var logoImageView: UIImageView?
     
@@ -72,7 +85,9 @@ final public class TSQBioAuthViewController: UIViewController {
     }
     
     private func setupUI() {
-        self.view.backgroundColor = .white
+        self.blurView = UIVisualEffectView()
+        self.blurView?.effect = self.blurEffect
+        self.blurView?.alpha = self.blurAlpha
         
         self.backgroundImageView = UIImageView(frame: CGRect.zero)
         self.backgroundImageView?.image = self.backgroundImage
@@ -82,7 +97,9 @@ final public class TSQBioAuthViewController: UIViewController {
 
         self.logoImageView = UIImageView(frame: CGRect.zero)
         self.logoImageView?.image = self.logoImage
-        self.logoImageView?.contentMode = self.viewModel.logoImageConfig.contentMode
+        if let logoImageConfig = self.viewModel.logoImageConfig {
+            self.logoImageView?.contentMode = logoImageConfig.contentMode
+        }
 
         self.buttonsStackView = UIStackView(frame: CGRect.zero)
         self.buttonsStackView?.backgroundColor = .red
@@ -108,6 +125,7 @@ final public class TSQBioAuthViewController: UIViewController {
         
         guard let leftButton = self.leftButton,
             let rightButton = self.rightButton,
+            let blurView = self.blurView,
             let backgroundImageView = self.backgroundImageView,
             let logoImageView = self.logoImageView,
             let buttonsStackView = self.buttonsStackView else {
@@ -116,6 +134,7 @@ final public class TSQBioAuthViewController: UIViewController {
         self.buttonsStackView?.addArrangedSubview(leftButton)
         self.buttonsStackView?.addArrangedSubview(rightButton)
 
+        self.view.addSubview(blurView)
         self.view.addSubview(backgroundImageView)
         self.view.addSubview(logoImageView)
         self.view.addSubview(buttonsStackView)
@@ -133,6 +152,12 @@ final public class TSQBioAuthViewController: UIViewController {
             layoutGuide = self.view.layoutMarginsGuide
         }
         
+        self.blurView?.translatesAutoresizingMaskIntoConstraints = false
+        self.blurView?.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        self.blurView?.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        self.blurView?.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        self.blurView?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        
         self.backgroundImageView?.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundImageView?.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor).isActive = true
         self.backgroundImageView?.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor).isActive = true
@@ -140,12 +165,12 @@ final public class TSQBioAuthViewController: UIViewController {
         self.backgroundImageView?.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor).isActive = true
 
         self.logoImageView?.translatesAutoresizingMaskIntoConstraints = false
-        self.logoImageView?.heightAnchor.constraint(equalToConstant: self.viewModel.logoImageConfig.height).isActive = true
-        self.logoImageView?.widthAnchor.constraint(equalToConstant: self.viewModel.logoImageConfig.width).isActive = true
+        self.logoImageView?.heightAnchor.constraint(equalToConstant: self.viewModel.logoImageConfig?.height ?? 0).isActive = true
+        self.logoImageView?.widthAnchor.constraint(equalToConstant: self.viewModel.logoImageConfig?.width ?? 0).isActive = true
         self.logoImageView?.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor,
-                                                     constant: self.viewModel.logoImageConfig.xOffset).isActive = true
+                                                     constant: self.viewModel.logoImageConfig?.xOffset ?? 0).isActive = true
         self.logoImageView?.centerYAnchor.constraint(equalTo: layoutGuide.centerYAnchor,
-                                                     constant: self.viewModel.logoImageConfig.yOffset).isActive = true
+                                                     constant: self.viewModel.logoImageConfig?.yOffset ?? 0).isActive = true
 
         self.buttonsStackView?.translatesAutoresizingMaskIntoConstraints = false
         self.buttonsStackView?.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor,
@@ -208,14 +233,19 @@ extension TSQBioAuthViewController: TSQBioAuthenticationInternalDelegate {
 @available(iOS 9.0, *)
 extension TSQBioAuthViewController {
     static func create(viewModel: TSQBioAuthViewModel,
-                              backgroundImage: UIImage? = nil,
-                              logoImage: UIImage? = nil,
-                              backgroundColor: UIColor?) -> UIViewController {
+                       backgroundImage: UIImage?,
+                       logoImage: UIImage?,
+                       backgroundColor: UIColor?,
+                       blurEffect: UIBlurEffect?,
+                       blurAlpha: CGFloat) -> UIViewController {
         let viewController = TSQBioAuthViewController()
         viewController.setDependencies(viewModel: viewModel)
         viewController.backgroundImage = backgroundImage
         viewController.logoImage = logoImage
-        viewController.view.backgroundColor = backgroundColor ?? .white
+        viewController.view.backgroundColor = backgroundColor
+        viewController.blurEffect = blurEffect
+        viewController.blurAlpha = blurAlpha
+        viewController.modalPresentationStyle = .overFullScreen
         
         return viewController
     }
