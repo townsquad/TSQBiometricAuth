@@ -28,6 +28,8 @@ public enum TSQBioAuthType {
             return .biometricOnly
         case .deviceOwnerAuthentication:
             return .biometricAndPasscode
+        @unknown default:
+            return .biometricAndPasscode
         }
     }
 }
