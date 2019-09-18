@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'TSQBiometricAuth'
-    s.version          = '2.0.12'
+    s.version          = '2.1.0'
     s.summary          = 'A lib for biometric authentication on iOS devices, implemented with Swift and Rx.'
     
     # This description is used to generate tags and improve search results.
@@ -29,7 +29,7 @@ Pod::Spec.new do |s|
     # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
     
     s.ios.deployment_target = '9.0'
-    s.swift_version = '4.1'
+    s.swift_version = '5.0'
     
     s.source_files = 'TSQBiometricAuth/Classes/**/*.{swift}'
     
@@ -39,5 +39,5 @@ Pod::Spec.new do |s|
     
     # s.public_header_files = 'Pod/Classes/**/*.h'
     # s.frameworks = 'UIKit', 'MapKit'
-    s.dependency 'RxSwift', '~> 4.0'
+    s.dependency 'RxSwift', '~> 5.0'
 end

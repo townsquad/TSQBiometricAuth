@@ -12,13 +12,13 @@ public struct TSQImageConfiguration {
     let width: CGFloat
     let xOffset: CGFloat
     let yOffset: CGFloat
-    let contentMode: UIViewContentMode
+    let contentMode: UIView.ContentMode
     
     public init(height: CGFloat = 80,
                 width: CGFloat = 80,
                 xOffset: CGFloat = 0,
                 yOffset: CGFloat = 0,
-                contentMode: UIViewContentMode = .scaleToFill) {
+                contentMode: UIView.ContentMode = .scaleToFill) {
         self.height = height
         self.width = width
         self.xOffset = xOffset
